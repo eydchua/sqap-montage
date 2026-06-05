@@ -257,7 +257,7 @@ def imod_blendmont(stk_file, plin_file, plout_file, blend_size,
         f"blendmont -imin {stk_file} -plin {plin_file} "
         f"-imout {intermediate} "
         f"-roo {os.path.join(processing_dir, rootname)} "
-        f"-al {plout_file} -adj -shift"
+        f"-al {plout_file} -adj -shift -sl -intensity 2"
     )
     result_blend = subprocess.run(
         blend_cmd,
@@ -267,14 +267,16 @@ def imod_blendmont(stk_file, plin_file, plout_file, blend_size,
     if result_blend.returncode != 0:
         print(f"  [WARNING] blendmont failed:\n  {result_blend.stderr.decode().strip()}")
 
-    clip_cmd = f"clip resize -ox {blend_size} -oy {blend_size} {intermediate} {blended_output}"
+    '''clip_cmd = f"clip resize -ox {blend_size} -oy {blend_size} {intermediate} {blended_output}"
     result_clip = subprocess.run(
         clip_cmd,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
     )
     _write_command_log(clip_log_path, clip_cmd, result_clip)
     if result_clip.returncode != 0:
-        print(f"  [WARNING] clip failed:\n  {result_clip.stderr.decode().strip()}")
+        print(f"  [WARNING] clip failed:\n  {result_clip.stderr.decode().strip()}")'''
+    result_clip = None  # clip is currently disabled; set to None for clarity
+    clip_cmd = "clip step is currently disabled"
 
     return result_blend, result_clip, [blend_cmd, clip_cmd]
 
